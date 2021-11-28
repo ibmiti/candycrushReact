@@ -31,16 +31,26 @@ function App() {
     }
 
     // constrains the number of times createboard is called to 1
+    // useEffect 1. causes the createBoard to be called as a sideeffect of the App functions being called once. 2. the empty arr when filled becomes the listener for events, so if we placed width var within and it changes this func will execute
     useEffect(() => {
         createboard();
-    }, [])
+    }, []);
 
 
     console.log(currentColorArrangement);
 
   return (
-    <div className="App"> </div>
-  );
+    <div className="App">
+        <div className="game">
+            { currentColorArrangement.map((candyColor, index) => (
+                <img
+                    key={index}
+                    style={{backgroundColor: candyColor}}
+                />
+            ))}
+        </div>
+     </div>
+  )
 }
 
 export default App;
