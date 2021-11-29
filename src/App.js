@@ -36,9 +36,6 @@ function App() {
         createboard();
     }, []);
 
-
-    console.log(currentColorArrangement);
-
   return (
     <div className="App">
         <div className="game">
