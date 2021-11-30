@@ -142,7 +142,7 @@ function App() {
             checkForRowOfThree();
             moveIntoSquareBelow();
             setCurrentColorArrangement([...currentColorArrangement]);
-        }, 100)
+        }, 300)
         return () => clearInterval(timer)
     }, [checkForColumnOfThree, checkForColumnOfFour, checkForRowOfThree, checkForRowOfFour, moveIntoSquareBelow, currentColorArrangement])
 
