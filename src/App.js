@@ -85,10 +85,9 @@ function App() {
         }
     }
     // CHECKING FOR 3 MATCHING SQUARES ( ROWS / HORIZONTAL ) :
-
+    function createboard() {
     // CREATE BOARD FOR GAME
     // create array of 64 items, will be made of colors above : this will become our board.
-    function createboard() {
         const randomColorArrangement = [];
         for (let i = 0; i < 64; i++){
             const randomNumberFrom0to5 = Math.floor(Math.random() * candyColors.length);
@@ -96,6 +95,28 @@ function App() {
             randomColorArrangement.push(randomcolor);
         }
         setCurrentColorArrangement(randomColorArrangement)
+    }
+
+
+    const moveIntoSquareBelow = () => {
+    // 1. Purpose : Move all squares above matched row/column group
+    // a. squares are matched using the checks within the above methods
+    // b. this animates the matched groups up to the top of screen
+    // c. while moving non-matched squares to the bottom of screen.
+        for ( let i = 0; i < 64 - width; i++ ){
+            const firstRow = [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+            const isFirstRow = firstRow.includes(i)
+
+            if (isFirstRow && currentColorArrangement[i] === '') {
+                let randomNumber = Math.floor(Math.random() * candyColors.length);
+                currentColorArrangement[i] = candyColors[randomNumber];
+            }
+
+            if ((currentColorArrangement[i + width]) === ''){
+                currentColorArrangement[i + width] = currentColorArrangement[i]
+                currentColorArrangement[i] = '';
+            }
+        }
     }
 
     // constrains the number of times createboard is called to 1
@@ -112,17 +133,18 @@ function App() {
     // 5. when the checkForColumnThree runs returns, the useEffect() is executed again.
     // 6. spreading the currentColorArrangement and setting the items into the setCurrentColorArrangement
     // 7. goal : create a column of three with no content inside.
+
     useEffect(() => {
         const timer = setInterval(()=>{
             checkForColumnOfFour();
             checkForRowOfFour();
             checkForColumnOfThree();
             checkForRowOfThree();
-
+            moveIntoSquareBelow();
             setCurrentColorArrangement([...currentColorArrangement]);
         }, 100)
         return () => clearInterval(timer)
-    }, [checkForColumnOfThree, checkForColumnOfFour, checkForRowOfThree, checkForRowOfFour, currentColorArrangement])
+    }, [checkForColumnOfThree, checkForColumnOfFour, checkForRowOfThree, checkForRowOfFour, moveIntoSquareBelow, currentColorArrangement])
 
     console.log(currentColorArrangement);
 
