@@ -2,8 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 
-// reference : https://www.youtube.com/watch?v=PBrEq9Wd6_U
-
 // important variables / array's used in game
 const width = 8;
 const candyColors = [
