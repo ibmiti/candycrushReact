@@ -1,16 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
+import blueSquare from './images/blue.jpeg';
+import greenSquare from './images/green.jpeg';
+import orangeSquare from './images/orange.jpeg';
+import purpleSquare from './images/purple.jpeg';
+import redSquare from './images/red.jpeg';
+import yellowSquare from './images/yellow.jpeg';
+import blank from './images/blank.jpeg';
 
 
-// this function defines 1. creation of game board  2. generating random color choices from arr 3. pushing those colors to arr/gameboard
+// What happening here
+// 1. a board is created
+// 2. that board is filled with images
+// 3. the board is has 64 total images / squares
+// 4. Board has 8 rows 8 columns ( 8 x 8 : 64 total squares )
+// 5. Row of 3 is defined : [0,1,2] ( row of 3 squares )
+// 6. Column of 3 is defined as : [i, i + width, i + width * 3] or [ 0, 8, 16]
+// 7. Column of 4 : [ 0, 8 , 16, 24 ] or  [i, i + width, i + width * 2, i + width * 3];
+// 8. Row of 4 : [0,1,2,3]
+// ...
 
-// BOARD STATE CONSTANTS
 
 // CHECKING FOR MATCHING SQUARES ( 1 )
 // 1. define column of 4. e.g; | [i, i + width, i + width * 3];
 // 2. if every square in the column of 4 is the same as the decided color go to line 3.
-// 3. remove that color and replace with ''
+// 3. remove that color and replace with blank
 // 4. which leads to any identify vertical column of 4 with the same color as the decided color being removed.
 // *. setting columns [0, 8, 16, ...]
 
@@ -27,48 +41,28 @@ import { useEffect, useState } from 'react';
 // 2. if there exists on the board same matching square 3 times then, that is a match
 // 3. notValid : these are the rows we want excluded from checks.. for game logic reasons
 
-// Steps
-// 1. do much of what checkForRowOfThree func does.
-// 2. except define row of four
 
-// Dragging Behaviour of SQUARES
+// Dragging Behaviour of SQUARES :
 // 1. dom element animations: a. dragStart b. dragDrop c. dragEnd
 
-
+// ANIMATION OF THE BOARD WHEN SQUARES ARE MATCHED :
 // 1. Purpose : Move all squares above matched row/column group
 // a. squares are matched using the checks within the above methods
 // b. this animates the matched groups up to the top of screen
 // c. while moving non-matched squares to the bottom of screen.
 
-// CHECKING FOR 3 MATCHING SQUARES ( ROWS / HORIZONTAL ) :
-
-// CREATE BOARD FOR GAME
-// create array of 64 items, will be made of colors above : this will become our board.
-
+// RESTRAINTS PLACED ON GAME BOARD AND DOM
 // constrains the number of times createboard is called to 1
 // useEffect 1. causes the createBoard to be called as a sideeffect of the App functions being called once. 2. the empty arr when filled becomes the listener for events, so if we placed width var within and it changes this func will execute
 
-// GAME LOGIC ( 2 )
-// 1. after board is created, these are the next set of actions :
-// 2. clears the setInterval timer
-// 3. every 100ms run: checkForColumnOfThree
-// 4. if matching color/square is found,
-// 5. when the checkForColumnThree runs returns, the useEffect() is executed again.
-// 6. spreading the currentColorArrangement and setting the items into the setCurrentColorArrangement
-// 7. goal : create a column of three with no content inside.
-
-// this is the visual build of the site
-
-
-
 const width = 8;
-const candyColors = [
-    'blue',
-    'green',
-    'orange',
-    'purple',
-    'red',
-    'yellow'
+const squareColors = [
+    blueSquare,
+    greenSquare,
+    orangeSquare,
+    purpleSquare,
+    redSquare,
+    yellowSquare
 ];
 
 function App() {
@@ -82,7 +76,7 @@ function App() {
             const columnOfFour = [i, i + width, i + width * 2, i + width * 3]; //*
             const decidedColor = currentColorArrangement[i];
             if ( columnOfFour.every(square => currentColorArrangement[square] === decidedColor)){
-                columnOfFour.forEach( square => currentColorArrangement[square] = '')
+                columnOfFour.forEach( square => currentColorArrangement[square] = blank)
                 return true;
             }
         }
@@ -94,7 +88,7 @@ function App() {
             const notValid = [ 5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55, 62, 63, 64 ];
             if (notValid.includes(i)) continue
             if ( rowOfFour.every(square => currentColorArrangement[square] === decidedColor)){
-                rowOfFour.forEach( square => currentColorArrangement[square] = '');
+                rowOfFour.forEach( square => currentColorArrangement[square] = blank);
                 return true;
             }
         }
@@ -105,7 +99,7 @@ function App() {
             const columnOfThree = [i, i + width, i + width * 2];
             const decidedColor = currentColorArrangement[i];
             if ( columnOfThree.every(square => currentColorArrangement[square] === decidedColor)){
-                columnOfThree.forEach( square => currentColorArrangement[square] = '');
+                columnOfThree.forEach( square => currentColorArrangement[square] = blank);
                 return true;
             }
         }
@@ -120,7 +114,7 @@ function App() {
             if (notValid.includes(i)) continue
 
             if ( rowOfThree.every(square => currentColorArrangement[square] === decidedColor)){
-                rowOfThree.forEach( square => currentColorArrangement[square] = '');
+                rowOfThree.forEach( square => currentColorArrangement[square] = blank);
                 return true;
             }
         }
@@ -144,8 +138,8 @@ function App() {
         const squareBeingDraggedId = parseInt(squareBeingDragged.getAttribute('data-id'));
         const squareBeingReplacedId = parseInt(squareBeingReplaced.getAttribute('data-id'));
 
-        currentColorArrangement[squareBeingReplacedId] = squareBeingDragged.style.backgroundColor;
-        currentColorArrangement[squareBeingDraggedId] = squareBeingReplaced.style.backgroundColor;
+        currentColorArrangement[squareBeingReplacedId] = squareBeingDragged.getAttribute('src');
+        currentColorArrangement[squareBeingDraggedId] = squareBeingReplaced.getAttribute('src');
 
         console.log('squareBeingDraggedId', squareBeingDraggedId);
         console.log('squareBeingReplacedId', squareBeingReplacedId);
@@ -172,8 +166,8 @@ function App() {
             setSquareBeingDragged(null);
             setSquareBeingReplaced(null);
         } else { // if condition not met : place the squares back to origin positions.
-            currentColorArrangement[squareBeingReplacedId] = squareBeingReplaced.style.backgroundColor;
-            currentColorArrangement[squareBeingDraggedId] = squareBeingDragged.style.backgroundColor;
+            currentColorArrangement[squareBeingReplacedId] = squareBeingReplaced.getAttribute('src');
+            currentColorArrangement[squareBeingDraggedId] = squareBeingDragged.getAttribute('src');
             setCurrentColorArrangement([...currentColorArrangement]);
         }
 
@@ -182,8 +176,8 @@ function App() {
     function createboard() {
         const randomColorArrangement = [];
         for (let i = 0; i < 64; i++){
-            const randomNumberFrom0to5 = Math.floor(Math.random() * candyColors.length);
-            const randomcolor = candyColors[randomNumberFrom0to5];
+            const randomNumberFrom0to5 = Math.floor(Math.random() * squareColors.length);
+            const randomcolor = squareColors[randomNumberFrom0to5];
             randomColorArrangement.push(randomcolor);
         }
         setCurrentColorArrangement(randomColorArrangement);
@@ -195,14 +189,14 @@ function App() {
             const firstRow = [ 0, 1, 2, 3, 4, 5, 6, 7 ]
             const isFirstRow = firstRow.includes(i)
 
-            if (isFirstRow && currentColorArrangement[i] === '') {
-                let randomNumber = Math.floor(Math.random() * candyColors.length);
-                currentColorArrangement[i] = candyColors[randomNumber];
+            if (isFirstRow && currentColorArrangement[i] === blank) {
+                let randomNumber = Math.floor(Math.random() * squareColors.length);
+                currentColorArrangement[i] = squareColors[randomNumber];
             }
 
-            if ((currentColorArrangement[i + width]) === ''){
+            if ((currentColorArrangement[i + width]) === blank){
                 currentColorArrangement[i + width] = currentColorArrangement[i]
-                currentColorArrangement[i] = '';
+                currentColorArrangement[i] = blank;
             }
         }
     }
@@ -226,11 +220,11 @@ function App() {
   return (
     <div className="App">
         <div className="game">
-            { currentColorArrangement.map((candyColor, index) => (
+            { currentColorArrangement.map((squareColor, index) => (
                 <img
                     key={index}
-                    style={{backgroundColor: candyColor}}
-                    alt={candyColor}
+                    src={squareColor}
+                    alt={squareColor}
                     data-id={index}
                     draggable={true}
                     onDragStart={dragStart}
